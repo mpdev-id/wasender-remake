@@ -12,8 +12,8 @@
     "node": ">=14.5.0"
   },
   "dependencies": {
-    "@adiwajshing/baileys": "github:WhiskeySockets/Baileys",
     "@adiwajshing/keyed-db": "^0.2.4",
+    "@fizzxydev/baileys-pro": "^8.6.11",
     "axios": "^1.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",

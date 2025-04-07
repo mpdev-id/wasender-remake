@@ -10,7 +10,9 @@ import baileys, {
     Browsers,
     DisconnectReason,
     delay,
-} from '@adiwajshing/baileys'
+// } from '@adiwajshing/baileys'
+} from '@fizzxydev/baileys-pro'
+
 import { toDataURL } from 'qrcode'
 import dirname from './dirname.js'
 import response from './response.js'

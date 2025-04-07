@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import { getSession, getChatList, isExists, sendMessage, formatPhone } from './../whatsapp.js'
 import response from './../response.js'
 
@@ -17,8 +18,8 @@ const send = async (req, res) => {
         if (!exists) {
             return response(res, 400, false, 'The receiver number is not exists.')
         }
-        
-        await sendMessage(session, receiver,message, delay)
+
+        await sendMessage(session, receiver, message, delay)
 
         response(res, 200, true, 'The message has been successfully sent.')
     } catch {
