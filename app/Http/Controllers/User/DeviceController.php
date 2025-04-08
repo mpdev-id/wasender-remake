@@ -50,8 +50,8 @@ class DeviceController extends Controller
        else{
          $data['total']= $data['total'].' / '. $limit;
        }
-       
-       
+
+
        return response()->json($data);
     }
 
@@ -65,7 +65,7 @@ class DeviceController extends Controller
         return view('user.device.create');
     }
 
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -75,11 +75,11 @@ class DeviceController extends Controller
      */
     public function store(Request $request)
     {
-       
+
         if (getUserPlanData('device_limit') == false) {
             return response()->json([
                 'message'=>__('Maximum Device Limit Exceeded')
-            ],401);  
+            ],401);
         }
 
         $validated = $request->validate([
@@ -119,6 +119,8 @@ class DeviceController extends Controller
                 'isLegacy' =>false
         ]);
 
+        // echo $response->status();
+
         if ($response->status() == 200) {
              $body=json_decode($response->body());
              $data['qr']=$body->data->qr;
@@ -143,7 +145,7 @@ class DeviceController extends Controller
        $id=$device->id;
        $response=Http::get(env('WA_SERVER_URL').'/sessions/status/device_'.$id);
 
-       $device->status= $response->status() == 200 ? 1 : 0; 
+       $device->status= $response->status() == 200 ? 1 : 0;
        if ($response->status() == 200) {
            $res=json_decode($response->body());
            if (isset($res->data->userinfo)) {
@@ -154,11 +156,11 @@ class DeviceController extends Controller
 
              $device->phone=$phone;
              $device->qr=null;
-             
-           }
-           
 
-       }         
+           }
+
+
+       }
        $device->save();
 
        $message= $response->status() == 200 ? __('Device Connected Successfully') : null;
@@ -183,7 +185,7 @@ class DeviceController extends Controller
 
     public function webHook(Request $request,$device_id)
     {
-       
+
        $session=$device_id;
        $device_id=str_replace('device_','',$device_id);
 
@@ -195,13 +197,13 @@ class DeviceController extends Controller
             'session_id' => $session
           ],403);
        }
-       
+
        if (getUserPlanData('chatbot',$device->user_id) == false) {
             return response()->json([
              'message'  => array('text' => 'this is reply'),
              'receiver' => $request->from,
              'session_id' => $session
-            ],401);  
+            ],401);
         }
 
        $request_from=explode('@',$request->from);
@@ -211,7 +213,7 @@ class DeviceController extends Controller
        $message=$request->message ?? null;
        $device_id=$device_id;
 
-      
+
        if (strlen($message) < 50 && $device != null && $message != null) {
           $replies=Reply::where('device_id',$device_id)->with('template')->where('keyword','LIKE','%'.$message.'%')->latest()->get();
 
@@ -219,14 +221,14 @@ class DeviceController extends Controller
             if ($reply->match_type == 'equal') {
 
                 if ($reply->reply_type == 'text') {
-                 
+
                  return response()->json([
                     'message'  => array('text' => $reply->reply),
                     'receiver' => $request->from,
                     'session_id' => $session
                   ],200);
 
-                 
+
                 }
                 else{
                     if (!empty($reply->template)) {
@@ -236,7 +238,7 @@ class DeviceController extends Controller
                             $body = $template->body;
                             $text=$this->formatText($template->body['text'],[],$device->user);
                             $body['text'] = $text;
-                            
+
                         }
                         else{
                             $body=$template->body;
@@ -248,25 +250,25 @@ class DeviceController extends Controller
                             'session_id' => $session
                         ],200);
                     }
-                    
+
                 }
 
                 break;
-                
+
             }
 
           }
 
 
        }
-       
+
 
        return response()->json([
             'message'  => array('text' => 'this is reply'),
             'receiver' => $request->from,
             'session_id' => $session
           ],403);
-       
+
     }
 
     public function logoutSession($id)
@@ -363,7 +365,7 @@ class DeviceController extends Controller
             Http::delete(env('WA_SERVER_URL').'/sessions/delete/device_'.$device->id);
          }
         } catch (Exception $e) {
-            
+
         }
         $device->delete();
 
@@ -371,6 +373,6 @@ class DeviceController extends Controller
             'message' => __('Congratulations! Your Device Successfully Removed'),
             'redirect' => route('user.device.index')
         ]);
-       
+
     }
 }

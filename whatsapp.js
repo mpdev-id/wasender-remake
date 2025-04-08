@@ -48,7 +48,7 @@ const shouldReconnect = (sessionId) => {
 
 const createSession = async (sessionId, isLegacy = false, res = null) => {
     const sessionPrefix = (isLegacy ? 'legacy_' : 'md_') + sessionId + (isLegacy ? '.json' : '')
-    const logger = pino({ level: 'warn' })
+    const logger = pino({ level: 'trace' })
     const store = makeInMemoryStore({ logger })
 
     let state, saveCreds
@@ -60,7 +60,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
     const socketConfig = {
         auth: state,
         version: [2, 3000, 101234567],
-        printQRInTerminal: false,
+        printQRInTerminal: true,
         logger,
         // browser: Browsers.ubuntu('Chrome'),
         browser: Browsers.macOS('Desktop'),
