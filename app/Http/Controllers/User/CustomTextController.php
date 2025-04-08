@@ -20,7 +20,7 @@ class CustomTextController extends Controller
     //return custom text message view page
     public function index()
     {
-       
+
         $phoneCodes=file_exists('uploads/phonecode.json') ? json_decode(file_get_contents('uploads/phonecode.json')) : [];
         $devices=Device::where('user_id',Auth::id())->where('status',1)->latest()->get();
         return view('user.singlesend.create',compact('phoneCodes','devices'));
@@ -29,24 +29,24 @@ class CustomTextController extends Controller
     //sent custom text msg request to api
     public function sentCustomText(Request $request,$type)
     {
-       
+
 
         $validated = $request->validate([
             'phone'   => ['required', new Phone],
-            'device'=>['required','numeric'], 
+            'device'=>['required','numeric'],
         ]);
 
         if (getUserPlanData('messages_limit') == false) {
             return response()->json([
                 'message'=>__('Maximum Monthly Messages Limit Exceeded')
-            ],401);  
+            ],401);
         }
 
         if ($request->templatestatus) {
             if (getUserPlanData('template_limit') == false) {
                 return response()->json([
                     'message'=>__('Maximum Template Limit Exceeded')
-                ],401);  
+                ],401);
             }
         }
 
@@ -71,7 +71,7 @@ class CustomTextController extends Controller
                 'org_name' => 'required|max:100',
                 'contact_number' => ['required', new Phone,'max:20'],
                 'wa_number' => ['required', new Phone,'max:20'],
-                
+
             ]);
         }
         elseif ($type == 'text-with-button') {
@@ -111,7 +111,7 @@ class CustomTextController extends Controller
                    break;
                 }
                 else{
-                     
+
 
                      foreach ($button as $buttonKey => $buttonValue) {
                         if ($buttonKey == 'type') {
@@ -120,15 +120,15 @@ class CustomTextController extends Controller
                               break;
                             }
                         }
-                        
+
                         if (!in_array($buttonKey, $properties)) {
                             $is_valid = false;
                             break;
                         }
 
                         else{
-                           
-                           
+
+
                             if($buttonKey == 'action'){
 
                                 if (!empty($buttonValue)) {
@@ -145,10 +145,10 @@ class CustomTextController extends Controller
                                      }
                                 }
 
-                                
+
                             }
                             else{
-                               
+
 
                                 if (empty($buttonValue) || $buttonValue == null) {
 
@@ -169,7 +169,7 @@ class CustomTextController extends Controller
 
                     }
                 }
-               
+
             }
 
             if ($is_valid == false) {
@@ -206,7 +206,7 @@ class CustomTextController extends Controller
 
 
             foreach ($request->section as $key => $section) {
-            
+
                if (count($section['value'] ?? []) == 0) {
                    $is_valid=false;
                    $error_message=__('Fill up the list option value');
@@ -256,9 +256,9 @@ class CustomTextController extends Controller
             }
         }
 
-       
 
-       
+
+
 
         if ($request->templatestatus) {
             $validated = $request->validate([
@@ -273,8 +273,8 @@ class CustomTextController extends Controller
            }
         }
 
-        
-       
+
+
 
         $whatsapp= $this->messageSend($request->all(),$device->id,$phone,$type);
 
@@ -292,11 +292,11 @@ class CustomTextController extends Controller
            $logs['type']='single-send';
 
            $this->saveLog($logs);
-           
+
            return response()->json([
                     'message' => __('Message sent successfully..!!'),
                 ], 200);
-        }           
+        }
 
     }
 

@@ -3,7 +3,7 @@
 @include('layouts.main.headersection',['title'=>__('Single Send')])
 @endsection
 @push('topcss')
-    
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/css/uikit.min.css">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/select2/dist/css/select2.min.css') }}">
 @endpush
@@ -33,14 +33,14 @@
                                     {{ __('Template Message ') }} <small class="text-danger">{{ __('(Beta)') }}</small>
                                 </a>
                             </li>
-                            <li class="nav-item mt-2">
+                            {{-- <li class="nav-item mt-2">
                                 <a class="nav-link" id="profile-tab4" data-toggle="tab" href="#mode_5" role="tab" aria-controls="profile" aria-selected="false">{{ __('List Message') }}</a>
-                            </li>
-                            
+                            </li> --}}
+
                             <li class="nav-item mt-2">
                                 <a class="nav-link" id="profile-tab4" data-toggle="tab" href="#mode_7" role="tab" aria-controls="profile" aria-selected="false">{{ __('Send Location') }}</a>
                             </li>
-                           
+
 
                             <li class="nav-item mt-2 none">
                                 <a class="nav-link" id="profile-tab4" data-toggle="tab" href="#mo" role="tab" aria-controls="profile" aria-selected="false"></a>
@@ -54,14 +54,14 @@
                                     @csrf
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            
+
                                                 <label>{{ __('Select Device') }}</label>
                                                 <select class="form-control" name="device" required="" data-toggle="select">
                                                     @foreach($devices as $device)
                                                     <option value="{{ $device->id }}">{{ $device->name }} (+{{ $device->phone }})</option>
                                                     @endforeach
                                                 </select>
-                                            
+
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
@@ -81,14 +81,14 @@
                                                 <textarea id="myTextarea" class="form-control h-200 one mt-1" name="message" required="" maxlength="1000"></textarea>
                                             </div>
                                         </div>
-                                     
+
                                          <div class="col-sm-12 plain-title none">
                                             <div class="form-group">
                                                 <label>{{ __('Template Name') }}</label>
                                                 <input type="text" name="template_name" class="form-control" >
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-sm-12">
                                             <div class="row">
                                              <div class="col-sm-8 d-flex">
@@ -132,7 +132,7 @@
                                                 <input id="phone" type="file" class="form-control" name="file" required="" />
                                                <small>{{__(' Supported file type:')}}</small> <small class="text-danger">{{ __('jpg,jpeg,png,webp,pdf,docx,xlsx,csv,txt') }}</small>
                                             </div>
-                                            
+
 
                                         </div>
                                         <div class="col-sm-12">
@@ -147,7 +147,7 @@
                                                 <textarea id="myTextarea1" class="form-control h-200 one mt-1" name="message" required="" maxlength="1000"></textarea>
                                             </div>
                                         </div>
-                                       
+
 
                                           <div class="col-sm-12 text-with-file none">
                                             <div class="form-group">
@@ -155,7 +155,7 @@
                                                 <input type="text" name="template_name" class="form-control" >
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-sm-12">
                                             <div class="row">
                                                <div class="col-sm-8 d-flex">
@@ -175,8 +175,8 @@
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="mode_3" role="tabpanel" aria-labelledby="profile-tab4">
-                              
-                              
+
+
 
                                 <form method="POST" action="{{ route('user.sent.customtext','text-with-button') }}" class="ajaxform_reset_form" enctype="multipart/form-data">
                                     @csrf
@@ -237,7 +237,7 @@
                                                 <input type="text" name="template_name" class="form-control" >
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-sm-12">
                                             <div class="row">
                                                <div class="col-sm-8 d-flex">
@@ -256,7 +256,7 @@
                                     </div>
                                 </form>
                                 <div class="alert bg-gradient-primary text-white alert-dismissible fade show success-alert mt-4" role="alert">
-                                   
+
                                    <span class="alert-text">{{ __('Note: ') }} {{ __('This features working with only for IOS and Whatsapp Web') }}</span>
                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                       <span aria-hidden="true">×</span>
@@ -312,7 +312,7 @@
                                                         <a href="javascript:void(0)" id="add-more-action" class="btn btn-sm btn-primary btn-neutral float-right mb-1"><i class="fa fa-plus"></i>&nbsp{{ __('Add More') }}</a>
                                                     </div>
                                                 </div>
-                                               
+
                                                 <div id="action-body">
 
                                                     <div class="card card-primary mt-2 call-to-action-area">
@@ -346,7 +346,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                
+
 
                                                 </div>
                                             </div>
@@ -358,7 +358,7 @@
                                                 <input type="text" name="template_name" class="form-control" >
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-sm-12">
                                             <div class="row">
                                                <div class="col-sm-8 d-flex">
@@ -449,7 +449,7 @@
                                                     <div class="card card-primary card-item">
                                                         <div class="card-header">
                                                             <h4>{{ __('List 1') }}</h4>
-                                                          
+
                                                         </div>
                                                         <div class="card-body">
                                                             <div class="row">
@@ -481,7 +481,7 @@
 
                                                                 <div class="col-12 text-right">
                                                                     <a href="javascript:void(0)" class="text-right btn btn-sm btn-neutral add-more-option-item option-item-btn1" data-target=".list-item-area1" data-key="1"><i class="fas fa-plus"></i>&nbsp{{ __('Add More Item') }}</a>
-                                                                </div>    
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -495,7 +495,7 @@
                                                 <input type="text" name="template_name" class="form-control" >
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-sm-12">
                                             <div class="row">
                                                <div class="col-sm-8 d-flex">
@@ -513,7 +513,7 @@
                                   </div>
                               </form>
                                <div class="alert bg-gradient-primary text-white alert-dismissible fade show success-alert mt-4" role="alert">
-                                   
+
                                    <span class="alert-text">{{ __('Note:') }} {{ __('This features working with only for IOS and Whatsapp Web') }}</span>
                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                       <span aria-hidden="true">×</span>
@@ -558,7 +558,7 @@
                                                 <input type="text" name="template_name" class="form-control" >
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-sm-12">
                                             <div class="row">
                                                <div class="col-sm-8 d-flex">
@@ -632,7 +632,7 @@
                                             </div>
                                         </div>
 
-                                        
+
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="custom-control custom-checkbox mb-3">
@@ -672,7 +672,7 @@
             //specialButtons: green
         });
 
-   
+
         function insertTag(textareaId, openTag, closeTag) {
             var textarea = document.getElementById(textareaId);
             var startPos = textarea.selectionStart;

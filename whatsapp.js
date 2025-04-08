@@ -1,3 +1,4 @@
+/* eslint-disable capitalized-comments */
 /* eslint-disable camelcase */
 
 /* eslint-disable prefer-promise-reject-errors */
@@ -10,7 +11,7 @@ import baileys, {
     Browsers,
     DisconnectReason,
     delay,
-// } from '@adiwajshing/baileys'
+    // } from '@adiwajshing/baileys'
 } from '@fizzxydev/baileys-pro'
 
 import { toDataURL } from 'qrcode'
@@ -61,7 +62,8 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
         version: [2, 3000, 101234567],
         printQRInTerminal: false,
         logger,
-        browser: Browsers.ubuntu('Chrome'),
+        // browser: Browsers.ubuntu('Chrome'),
+        browser: Browsers.macOS('Desktop'),
         patchMessageBeforeSending: (message) => {
             const isButtonsMessage = Boolean(message.buttonsMessage || message.listMessage)
             if (isButtonsMessage) {
@@ -246,12 +248,12 @@ const isExists = async (sock, jid, isGroup = false) => {
     }
 }
 
-const sendMessage = async (sock, jid, message, delayMs = 1000) => {
+const sendMessage = async (socket, recipientId, msg, delayMilliseconds = 1000) => {
     try {
-        await delay(parseInt(delayMs))
-        return await sock.sendMessage(jid, message)
-    } catch {
-        return Promise.reject(null)
+        await delay(parseInt(delayMilliseconds, 10))
+        return await socket.sendMessage(recipientId, msg)
+    } catch (error) {
+        return Promise.reject(error)
     }
 }
 

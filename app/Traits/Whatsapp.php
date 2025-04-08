@@ -24,7 +24,7 @@ trait Whatsapp
         }
 
         sleep($delay);
-        
+
         $device=Device::where('status',1)->where('id',$from)->first();
         if (empty($device)) {
             return false;
@@ -32,22 +32,22 @@ trait Whatsapp
 
         //creating session id
         $session_id='device_'.$from;
-        
-        //formating message     
+
+        //formating message
         $message=$this->formatBody($data['message'] ?? '',$device->user_id);
-        
+
         //formating array context
         $formatedBody= $filter == false ? $this->formatArray($data,$message,$type) : $data;
-        
+
         //get server url
         $whatsServer=env('WA_SERVER_URL');
-        
+
         //formating array before sending data to server
         $body['receiver']=$reciver;
         $body['delay']=0;
         $body['message']=$formatedBody;
-         
-        //sending data to whatsapp server       
+
+        //sending data to whatsapp server
         try {
             $response=Http::post($whatsServer.'/chats/send?id='.$session_id,$body);
             $status=$response->status();
@@ -92,7 +92,7 @@ trait Whatsapp
                              $data['timestamp'] = $item->conversationTimestamp ?? 0;
                              return $data;
                         });
-            
+
             $responseData['status'] = 200;
             $responseData['data'] = $contacts;
         }
@@ -119,12 +119,12 @@ trait Whatsapp
             $colllections  = collect($responseBody->data);
 
             $contacts = $colllections->map(function($item) {
-                             
+
                              $data['name'] = $item->name;
                              $data['id'] = $item->id;
                              return $data;
                         });
-            
+
             $responseData['status'] = 200;
             $responseData['data'] = $contacts;
         }
@@ -145,7 +145,7 @@ trait Whatsapp
         }
 
         sleep($delay);
-        
+
         $device=Device::where('status',1)->where('id',$from)->first();
         if (empty($device)) {
             return false;
@@ -153,22 +153,22 @@ trait Whatsapp
 
         //creating session id
         $session_id='device_'.$from;
-        
-        //formating message     
+
+        //formating message
         $message=$this->formatBody($data['message'] ?? '',$device->user_id);
-        
+
         //formating array context
         $formatedBody= $filter == false ? $this->formatArray($data,$message,$type) : $data;
-        
+
         //get server url
         $whatsServer=env('WA_SERVER_URL');
-        
+
         //formating array before sending data to server
         $body['receiver']=$reciver;
         $body['delay']=0;
         $body['message']=$formatedBody;
-         
-        //sending data to whatsapp server       
+
+        //sending data to whatsapp server
         try {
             $response=Http::post($whatsServer.'/groups/send?id='.$session_id,$body);
             $status=$response->status();
@@ -211,9 +211,9 @@ trait Whatsapp
                 'csv'=>'document',
                 'txt'=>'document'
             ];
-            
+
             $content[$extentions[$file_type]]=['url' => asset($data['attachment'])];
-           
+
         }
         elseif ($type == 'text-with-button') {
             $buttons=[];
@@ -255,7 +255,7 @@ trait Whatsapp
                 $button_actions['displayText']=$button['displaytext'];
                 $button_actions[$button_type]=$button_action_content;
 
-               
+
 
                 $button_context['index']=$key;
                 $button_context[$button['type']]= $button_actions;
@@ -264,12 +264,12 @@ trait Whatsapp
                 $button_context=null;
 
             }
-          
+
 
            $content['text']=$message;
            $content['footer']=$data['footer_text'];
            $content['templateButtons']=$templateButtons;
-          
+
         }
         elseif ($type == 'text-with-location') {
             $content['location']=array(
@@ -279,22 +279,22 @@ trait Whatsapp
         }
         elseif ($type == 'text-with-vcard') {
             $vcard='BEGIN:VCARD\n' // metadata of the contact card
-            . 'VERSION:3.0\n' 
+            . 'VERSION:3.0\n'
             . 'FN:'.$data['full_name'].'\n' // full name
             . 'ORG:'.$data['org_name'].';\n' // the organization of the contact
             . 'TEL;type=CELL;type=VOICE;waid='.$data['contact_number'].':'.$data['wa_number'].'\n' // WhatsApp ID + phone number
             . 'END:VCARD';
 
-           
+
             $content = [
              "contacts" => [
-               "displayName" => "maruf", 
-               "contacts" => [[$vcard]] 
-             ] 
-            ]; 
+               "displayName" => "maruf",
+               "contacts" => [[$vcard]]
+             ]
+            ];
         }
         elseif ($type == 'text-with-list') {
-            
+
             $templateButtons=[];
 
             foreach ($data['section'] as $section_key => $sections) {
@@ -302,7 +302,7 @@ trait Whatsapp
                $rows=[];
 
                foreach ($sections['value'] as $value_key => $value) {
-                
+
                    $rowArr['title']=$value['title'];
                    $rowArr['rowId']='option-'.$section_key.'-'.$value_key;
 
@@ -320,16 +320,16 @@ trait Whatsapp
               array_push($templateButtons, $row);
               $row=[];
             }
-          
+
              $content = [
-               "text" => $message, 
-               "footer" =>  $data['footer_text'], 
-               "title" => $data['header_title'], 
-               "buttonText" =>$data['button_text'], 
+               "text" => $message,
+               "footer" =>  $data['footer_text'],
+               "title" => $data['header_title'],
+               "buttonText" =>$data['button_text'],
                "sections" => $templateButtons
-            ]; 
-           
-           
+            ];
+
+
         }
 
 
@@ -345,7 +345,7 @@ trait Whatsapp
           $template=  Template::findorFail($template_id);
           $template->status=isset($data['status']) ? 1 : 0;
        }
-       
+
        $template->title=$data['template_name'];
        $template->user_id=$user_id;
        $template->body=$this->formatArray($data,$message,$type);
@@ -364,7 +364,7 @@ trait Whatsapp
         $path = 'uploads/message/' . \Auth::id() . date('/y') . '/' . date('m') . '/';
         $filePath = $path.$filename;
 
-       
+
         Storage::put($filePath, file_get_contents($file));
 
         return Storage::url($filePath);
@@ -382,7 +382,7 @@ trait Whatsapp
            return $context;
         }
         else{
-           return $context; 
+           return $context;
         }
     }
 
@@ -392,7 +392,7 @@ trait Whatsapp
         $whatsServer=env('WA_SERVER_URL');
         $device_id='device_'.$device_id;
         $url = $whatsServer.'/groups/meta/'.$group_id.'?id='.$device_id;
-        
+
          try {
 
             $response=Http::get($url);
@@ -406,7 +406,7 @@ trait Whatsapp
             else{
                 $responseData['status'] = 200;
                 $responseData['data']=json_decode($response->body());
-                
+
             }
 
             return $responseData;
@@ -439,7 +439,7 @@ trait Whatsapp
            $context=str_replace('{my_contact_number}',$sender_phone,$context);
            $context=str_replace('{my_email}',$sender_email,$context);
        }
-      
+
        return $context;
 
 
@@ -448,7 +448,7 @@ trait Whatsapp
     private function formatCustomText($context='', $replaceableData = [])
     {
         $filteredContent = $context;
-        
+
         foreach ($replaceableData ?? [] as $key => $value) {
            $filteredContent = str_replace($key, $value, $filteredContent);
         }
