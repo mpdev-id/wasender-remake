@@ -48,7 +48,7 @@ const shouldReconnect = (sessionId) => {
 
 const createSession = async (sessionId, isLegacy = false, res = null) => {
     const sessionPrefix = (isLegacy ? 'legacy_' : 'md_') + sessionId + (isLegacy ? '.json' : '')
-    const logger = pino({ level: 'trace' })
+    const logger = pino({ level: 'warn' })
     const store = makeInMemoryStore({ logger })
 
     let state, saveCreds

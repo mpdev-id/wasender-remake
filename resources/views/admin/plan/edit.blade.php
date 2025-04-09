@@ -50,11 +50,11 @@
                     <label for="text">{{ __('Select Label Color') }}</label>
                     <div class="input-group">
                        <select class="form-control" name="labelcolor">
-                           <option value="price-color-1" {{ $plan->labelcolor == 'price-color-1' ? 'selected' : 
+                           <option value="price-color-1" {{ $plan->labelcolor == 'price-color-1' ? 'selected' :
                            '' }}>{{ __('Pink Color') }}</option>
-                           <option value="price-color-2" {{ $plan->labelcolor == 'price-color-2' ? 'selected' : 
+                           <option value="price-color-2" {{ $plan->labelcolor == 'price-color-2' ? 'selected' :
                            '' }}>{{ __('Sky Color') }}</option>
-                           <option value="price-color-3" {{ $plan->labelcolor == 'price-color-3' ? 'selected' : 
+                           <option value="price-color-3" {{ $plan->labelcolor == 'price-color-3' ? 'selected' :
                            '' }}>{{ __('Yellow Color') }}</option>
                        </select>
                         <span class="input-group-append">
@@ -81,7 +81,7 @@
                          <input type="number" name="plan_data[device_limit]"  value="{{ $plan->data['device_limit'] ?? '' }}" required="" class="form-control">
                     </div>
                 </div>
-               
+
                 <div class="from-group row mt-2">
                     <label class="col-lg-12">{{ __('Template Limit') }}</label>
                     <div class="col-lg-12">
@@ -121,8 +121,8 @@
                         </select>
                     </div>
                 </div>
-                
-               
+
+
                 <div class="from-group row mt-2">
                     <label class="col-lg-12">{{ __('Chat List Access') }}</label>
                     <div class="col-lg-12">

@@ -25,7 +25,7 @@ class BulkController extends Controller
 {
     use Whatsapp;
 
-    
+
     /**
      * sent message
      *
@@ -46,7 +46,7 @@ class BulkController extends Controller
         if (getUserPlanData('messages_limit', $user->id) == false) {
             return response()->json([
                 'message'=>__('Maximum Monthly Messages Limit Exceeded')
-            ],401);  
+            ],401);
         }
 
         if (!empty($request->template_id)) {
@@ -67,14 +67,14 @@ class BulkController extends Controller
             }
             $type = $template->type;
 
-            
+
         }
         else{
-            
+
             $text=$this->formatText($request->message);
             if(!empty($request->file)){
-               
-           
+
+
                     $explode=explode('.', $request->file);
                     $file_type=strtolower(end($explode));
                     $extentions=[
@@ -88,13 +88,13 @@ class BulkController extends Controller
                         'csv'=>'document',
                         'txt'=>'document'
                     ];
-                   
+
                     if(!isset($extentions[$file_type])){
                         $validators['error'] = 'file type should be jpg,jpeg,png,webp,pdf,docx,xlsx,csv,txt';
                         return response()->json($validators,403);
                     }
 
-                
+
                 $body[$extentions[$file_type]]=['url' => $request->file];
                 $body['caption'] = $text;
                 $type='text-with-media';
@@ -103,19 +103,19 @@ class BulkController extends Controller
                 $body['text'] = $text;
                 $type='plain-text';
             }
-            
-        }
 
+        }
+        // dd($body);
         if (!isset($body)) {
             return response()->json(['error'=>'Request Failed'],401);
-        }    
+        }
 
         try {
 
             $response= $this->messageSend($body,$app->device_id,$request->to,$type,true);
 
             if ($response['status'] == 200) {
-                
+
                 $logs['user_id']=$user->id;
                 $logs['device_id']=$app->device_id;
                 $logs['app_id']=$app->id;
@@ -128,7 +128,7 @@ class BulkController extends Controller
 
                 return response()->json(['message_status'=>'Success','data'=>[
                     'from'=>$app->device->phone ?? null,
-                    'to'=>$request->to,                
+                    'to'=>$request->to,
                     'status_code'=>200,
                 ]],200);
             }
@@ -170,23 +170,23 @@ class BulkController extends Controller
   * @return \Illuminate\Http\Response
   */
   public function webHook(Request $request,$device_id){
-       
+
        $session=$device_id;
        $device_id=str_replace('device_','',$device_id);
 
        $device=Device::with('user')->whereHas('user',function($query){
         return $query->where('will_expire','>',now());
        })->where('id',$device_id)->first();
-      
+
        $request_from=explode('@',$request->from);
        $request_from=$request_from[0];
 
        $message_id=$request->message_id ?? null;
        $message=json_encode($request->message ?? '');
        $message=json_decode($message);
-      
+
        $device_id=$device_id;
-       
+
        if (isset($message->conversation)) {
             $message = $message->conversation ?? null;
        }
@@ -203,14 +203,14 @@ class BulkController extends Controller
         $message = null;
        }
 
-              
-        
+
+
         if($device->hook_url){
             $hook = new Webhook;
             $hook->device_id = $device->id;
             $hook->user_id = $device->user_id;
             $hook->payload = json_encode([
-                'payload'=> $request->message ?? '', 
+                'payload'=> $request->message ?? '',
                 'sender'=> $request_from ?? '',
                 'receiver'=> $device->phone ?? '',
             ]);
@@ -221,16 +221,16 @@ class BulkController extends Controller
 
        if ($device != null && $message != null) {
 
-        
+
 
          $reply=Reply::where('device_id',$device_id)->with('template')->where('keyword', $message)->where('match_type','equal')->latest()->first();
-           
+
           if (empty($reply)) {
-              
-              
+
+
                  $responses=Reply::where('device_id',$device_id)->where('match_type','!=','equal')->with('template')->latest()->get();
 
-                
+
                  $maxMatches = 0;
                  $bestResponse = null;
 
@@ -251,32 +251,32 @@ class BulkController extends Controller
                 }
 
                 $reply = $bestResponse;
-            
-              
-             
+
+
+
           }
-          
-         
-          
+
+
+
           if ($reply != null) {
-               
+
 
                 if ($reply->reply_type == 'text') {
-                  
+
                   $logs['user_id']=$device->user_id;
                   $logs['device_id']=$device->id;
                   $logs['from']=$device->phone ?? null;
                   $logs['to']=$request_from;
                   $logs['type']='chatbot';
                   $this->saveLog($logs);
-                 
+
                  return response()->json([
                     'message'  => array('text' => $reply->reply),
                     'receiver' => $request->from,
                     'session_id' => $session
                   ],200);
 
-                 
+
                 }
                 else{
                     if (!empty($reply->template)) {
@@ -286,7 +286,7 @@ class BulkController extends Controller
                             $body = $template->body;
                             $text=$this->formatText($template->body['text'],[],$device->user);
                             $body['text'] = $text;
-                            
+
                         }
                         else{
                             $body=$template->body;
@@ -305,18 +305,18 @@ class BulkController extends Controller
                             'receiver' => $request->from,
                             'session_id' => $session
                         ],200);
-                    }                    
+                    }
                 }
-                             
-            
+
+
           }
        }
-       
+
        return response()->json([
             'message'  => array('text' => null),
             'receiver' => $request->from,
             'session_id' => $session
           ],403);
-       
+
     }
 }

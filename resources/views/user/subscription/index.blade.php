@@ -30,22 +30,22 @@
 			<div class="card-body">
 				<h2 class="pricing-green">{{ $plan->title }}</h2>
 				<h1>{{ amount_format($plan->price) }}</h1>
-				
+
 				{{ $plan->days == 30 ? 'Per month' : 'Per year' }}
-				
+
 				<hr>
 				@foreach($plan->data ?? [] as $key => $data)
 				<div class="mt-2 text-left">
 					@if(planData($key,$data)['is_bool'] == true)
 					@if(planData($key,$data)['value'] == true)
-					<i class="{{ planData($key,$data)['value'] == true ? 'far text-success fa-check-circle' : 'fas text-danger fa-times-circle' }}"></i> 
+					<i class="{{ planData($key,$data)['value'] == true ? 'far text-success fa-check-circle' : 'fas text-danger fa-times-circle' }}"></i>
 					@else
-					<i class="fas text-danger fa-times-circle"></i> 
+					<i class="fas text-danger fa-times-circle"></i>
 					@endif
 
 					@else
-					<i class="far text-success fa-check-circle"></i> 
-					@endif      
+					<i class="far text-success fa-check-circle"></i>
+					@endif
 					{{ str_replace('_',' ',planData($key,$data)['title']) }}
 				</div>
 				@endforeach
